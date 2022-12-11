@@ -1,15 +1,7 @@
 import Seo from '../components/Seo';
 import styles from '../styles/Home.module.css';
-import { InferGetServerSidePropsType } from 'next';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-} from '@material-ui/core';
+import UserTable from '../components/UserTable';
+import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 
 export default function Home({
   listData,
@@ -19,23 +11,18 @@ export default function Home({
   return (
     <div className={styles.container}>
       <Seo title="home" />
-
-      {listData?.map((list, index) => {
-        return (
-          <div key={list.id}>
-            <h3>{list.author}</h3>
-          </div>
-        );
-      })}
+      <UserTable listData={listData} />
     </div>
   );
 }
 
-export async function getServerSideProps() {
-  const listData = await (await fetch(`http://localhost:3001/api/list`)).json();
+export const getServerSideProps: GetServerSideProps = async () => {
+  const listData = await (await fetch(`http://localhost:3000/api/list`)).json();
+  console.log(listData);
+
   return {
     props: {
       listData,
     },
   };
-}
+};

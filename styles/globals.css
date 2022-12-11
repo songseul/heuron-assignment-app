@@ -18,9 +18,14 @@ a {
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;
+    max-width: 700px;
+    min-width: 370px;
+    margin: auto;
   }
   body {
     color: white;
     background: black;
+    width: 100%;
+    padding: 10px;
   }
 }
