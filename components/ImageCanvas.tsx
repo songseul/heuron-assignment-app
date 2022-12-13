@@ -1,29 +1,86 @@
-import React, { useRef, useEffect, useMemo, useState } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
+import { PicsumImage } from '../models/PicsumImage';
+import useThrottle from '../utils/utils';
 
-type DetailProps = {
-  image: string;
+type ImageCanvasProps = {
+  image?: PicsumImage;
 };
-const SCROLL_SENSITIVITY = 0.0005;
-const MAX_ZOOM = 5;
-const MIN_ZOOM = 0.1;
+const CANVAS_WIDTH = 640;
+const CANVAS_HEIGHT = 480;
+const IMAGE_WIDTH = 640;
+const IMAGE_HEIGHT = 480;
 
-function ImageCanvas({ image }: DetailProps) {
+function ImageCanvas({ image }: ImageCanvasProps) {
   // console.log(image);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  let canvasT = null || undefined;
+  const canvasRef = useRef<HTMLCanvasElement>(canvasT);
+  const [isDrag, setIsDrag] = useState<boolean>(false);
+  const [startX, setStartX] = useState<number>(0);
+  let scrollLeftSide = canvasRef?.current?.scrollLeft;
+  console.log(image?.download_url);
+
+  const onDragStart = (e: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => {
+    e.preventDefault();
+    console.log(scrollLeftSide);
+
+    setIsDrag(true);
+    setStartX(e.pageX + scrollLeftSide);
+  };
+  const onDragEnd = () => {
+    setIsDrag(false);
+  };
+  const onDragMove = (e: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => {
+    if (isDrag) {
+      const { scrollWidth, clientWidth, scrollLeft } = canvasRef?.current;
+      scrollLeftSide = startX - e.pageX;
+      console.log(scrollLeftSide);
+      if (scrollLeft === 0) {
+        setStartX(e.pageX);
+      } else if (scrollWidth <= clientWidth + scrollLeft) {
+        setStartX(e.pageX + scrollLeft);
+      }
+    }
+  };
+  const delay = 100;
+  const onThrottleDragMove = useThrottle<
+    [React.MouseEvent<HTMLCanvasElement, MouseEvent>]
+  >(onDragMove, delay);
 
   useEffect(() => {
-    const canvas = canvasRef.current;
-    const context = canvas?.getContext('2d');
+    const canvas = canvasRef?.current;
+    if (canvas == null) {
+      return;
+    }
+    const context = canvas.getContext('2d');
+    if (context == null) {
+      return;
+    }
+
+    if (image == null || image?.download_url == null) {
+      return;
+    }
+
     const img = new Image();
-    img.src = `https://${image}`;
+
+    img.src = image?.download_url;
+
     img.onload = () => {
-      context?.drawImage(img, 0, 0, 700, 500);
+      context.drawImage(img, 0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
     };
-  }, []);
+  }, [image]);
 
   return (
     <div className="canvas-container">
-      <canvas className="canvas" ref={canvasRef} width={700} height={500} />
+      <canvas
+        className="canvas"
+        ref={canvasRef}
+        width={CANVAS_WIDTH}
+        height={CANVAS_HEIGHT}
+        onMouseDown={onDragStart}
+        onMouseMove={onThrottleDragMove}
+        onMouseUp={onDragEnd}
+        onMouseLeave={onDragEnd}
+      />
       <style jsx>
         {`
           .canvas-container {

@@ -1,25 +1,41 @@
+import { useState } from 'react';
 import ImageCanvas from '../../components/ImageCanvas';
 import { InferGetServerSidePropsType } from 'next';
 import Seo from '../../components/Seo';
+import useThrottle from '../../utils/utils';
 
 function detailPage({
   id,
   listData,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  console.log(id);
-  const srcArr = id.slice(1);
-  const detailSrc = srcArr.join('/');
-  const [author] = id || [];
-  console.log(author);
-  console.log(listData);
+  const [index, setIndex] = useState<number>(0);
 
-  console.log(detailSrc);
+  const handleWheel = () => {
+    if (index >= 0 && index <= listData.length - 1) {
+      setIndex(index + 1);
+      console.log(index);
+    }
+    if (index >= listData.length - 1) {
+      console.log('over30', index);
+      setIndex(0);
+    }
+  };
+
+  const scrollThrottle = useThrottle(handleWheel, 1000);
+
+  console.log(id);
+  console.log(listData[index]);
 
   return (
-    <div>
-      <Seo title={author} />
-      <h2 className="title">{author}</h2>
-      <ImageCanvas image={detailSrc} />
+    <div onWheel={scrollThrottle}>
+      <Seo title={listData[index].author} />
+      <h2 className="title">{listData[index].author}</h2>
+      {listData[index] == null ? (
+        <> loading...</>
+      ) : (
+        <ImageCanvas image={listData[index]} />
+      )}
+
       <style jsx>{`
         .title {
           margin-top: 100px;

@@ -19,17 +19,15 @@ function UserTable({ listData }: HomeProps) {
     [key: string]: string;
   }
   const router = useRouter();
-  const onDetailPage = (author: string | number, img: []) => {
-    const newSrc = img.slice(8);
-
+  const onDetailPage = (author: string | number) => {
     router.push(
       {
-        pathname: `detail/${author}/${newSrc}`,
+        pathname: `detail/${author}`,
         query: {
           author,
         },
       },
-      `detail/${author}/${newSrc}`
+      `detail/${author}`
     );
   };
 
@@ -49,7 +47,7 @@ function UserTable({ listData }: HomeProps) {
               <TableRow
                 className="list-table"
                 key={list.id}
-                onClick={() => onDetailPage(list.author, list.download_url)}
+                onClick={() => onDetailPage(list.author)}
               >
                 <TableCell>{index + 1}</TableCell>
                 <TableCell align="right">{list.author}</TableCell>
