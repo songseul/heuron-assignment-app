@@ -13,7 +13,6 @@ function detailPage({
   const handleWheel = () => {
     if (index >= 0 && index <= listData.length - 1) {
       setIndex(index + 1);
-      console.log(index);
     }
     if (index >= listData.length - 1) {
       console.log('over30', index);
@@ -22,9 +21,6 @@ function detailPage({
   };
 
   const scrollThrottle = useThrottle(handleWheel, 1000);
-
-  console.log(id);
-  console.log(listData[index]);
 
   return (
     <div onWheel={scrollThrottle}>

@@ -17,17 +17,20 @@ function ImageCanvas({ image }: ImageCanvasProps) {
   const [isDrag, setIsDrag] = useState<boolean>(false);
   const [startX, setStartX] = useState<number>(0);
   let scrollLeftSide = canvasRef?.current?.scrollLeft;
-  console.log(image?.download_url);
 
   const onDragStart = (e: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => {
     e.preventDefault();
-    console.log(scrollLeftSide);
-
     setIsDrag(true);
     setStartX(e.pageX + scrollLeftSide);
   };
   const onDragEnd = () => {
     setIsDrag(false);
+  };
+  const rightClick = (e: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => {
+    e.preventDefault();
+    if (isDrag) {
+      return console.log('우클!');
+    }
   };
   const onDragMove = (e: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => {
     if (isDrag) {
@@ -80,6 +83,7 @@ function ImageCanvas({ image }: ImageCanvasProps) {
         onMouseMove={onThrottleDragMove}
         onMouseUp={onDragEnd}
         onMouseLeave={onDragEnd}
+        onContextMenu={rightClick}
       />
       <style jsx>
         {`
