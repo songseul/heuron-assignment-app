@@ -3,6 +3,7 @@ import ImageCanvas from '../../components/ImageCanvas';
 import { InferGetServerSidePropsType } from 'next';
 import Seo from '../../components/Seo';
 import useThrottle from '../../utils/utils';
+import Nav from '../../components/Nav';
 
 function DetailPage({
   id,
@@ -25,7 +26,8 @@ function DetailPage({
   return (
     <div onWheel={scrollThrottle}>
       <Seo title={listData[index].author} />
-      <h2 className="title">{listData[index].author}</h2>
+      <Nav title={listData[index].author} />
+
       {listData[index] == null ? (
         <> loading...</>
       ) : (

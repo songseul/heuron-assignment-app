@@ -45,10 +45,10 @@ function ImageCanvas({ image }: ImageCanvasProps) {
   };
   const onDragMove = (e: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => {
     if (isDrag) {
-      const { scrollWidth, clientWidth, scrollLeft } = canvasRef?.current;
-
       const img = new Image();
-      img.src = image?.download_url;
+      if (image) {
+        img.src = image?.download_url;
+      }
       const ctx = canvasRef?.current?.getContext('2d');
       ctx?.save();
 
@@ -75,12 +75,6 @@ function ImageCanvas({ image }: ImageCanvasProps) {
         ctx?.drawImage(img, 0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
         ctx?.restore();
         setRadian(angle);
-      }
-
-      if (scrollLeft === 0) {
-        setStartX(e.pageX);
-      } else if (scrollWidth <= clientWidth + scrollLeft) {
-        setStartX(e.pageX + scrollLeft);
       }
     }
   };
