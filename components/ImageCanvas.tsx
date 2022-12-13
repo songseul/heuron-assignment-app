@@ -51,8 +51,7 @@ function ImageCanvas({ image }: ImageCanvasProps) {
       img.src = image?.download_url;
       const ctx = canvasRef?.current?.getContext('2d');
       ctx?.save();
-      // 이미지는 항상 이미지의 왼쪽 위 부터 그려지는데
-      // 오른쪽으로 90도 회전했을때 이미지의 왼쪽 위가 캔버스의 오른쪽 위에 맞게끔 해주는 역할
+
       const zoom = e.pageX - startX > 0 ? 1.05 : 0.95;
       if (e.buttons === 1) {
         ctx?.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
@@ -120,17 +119,21 @@ function ImageCanvas({ image }: ImageCanvasProps) {
 
   return (
     <div className="canvas-container">
-      <canvas
-        className="canvas"
-        ref={canvasRef}
-        width={CANVAS_WIDTH}
-        height={CANVAS_HEIGHT}
-        onMouseDown={onDragStart}
-        onMouseMove={onThrottleDragMove}
-        onMouseUp={onDragEnd}
-        onMouseLeave={onDragEnd}
-        onContextMenu={onContextMenu}
-      />
+      {image ? (
+        <canvas
+          className="canvas"
+          ref={canvasRef}
+          width={CANVAS_WIDTH}
+          height={CANVAS_HEIGHT}
+          onMouseDown={onDragStart}
+          onMouseMove={onThrottleDragMove}
+          onMouseUp={onDragEnd}
+          onMouseLeave={onDragEnd}
+          onContextMenu={onContextMenu}
+        />
+      ) : (
+        <span> Image Loading...</span>
+      )}
       <style jsx>
         {`
           .canvas-container {
@@ -139,7 +142,6 @@ function ImageCanvas({ image }: ImageCanvasProps) {
           }
           .canvas {
             width: 100%;
-
             cursor: pointer;
           }
         `}

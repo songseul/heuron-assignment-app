@@ -4,7 +4,7 @@ import { InferGetServerSidePropsType } from 'next';
 import Seo from '../../components/Seo';
 import useThrottle from '../../utils/utils';
 
-function detailPage({
+function DetailPage({
   id,
   listData,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
@@ -42,7 +42,7 @@ function detailPage({
   );
 }
 
-export default detailPage;
+export default DetailPage;
 
 type Params = {
   params: {

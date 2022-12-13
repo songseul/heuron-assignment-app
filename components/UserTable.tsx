@@ -30,7 +30,9 @@ function UserTable({ listData }: HomeProps) {
       `detail/${author}`
     );
   };
-
+  if (!listData) {
+    return <h2> List Loading... </h2>;
+  }
   return (
     <div>
       <TableContainer component={Paper}>
@@ -58,15 +60,16 @@ function UserTable({ listData }: HomeProps) {
                     width={300}
                     height={200}
                     layout="responsive"
+                    className="image-list"
                   />
-                </TableCell>{' '}
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </TableContainer>
       <style jsx>{`
-        TableRow {
+        .image-list {
           cursor: pointer;
         }
       `}</style>
