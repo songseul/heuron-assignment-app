@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { PicsumImage } from '../models/PicsumImage';
 import useThrottle from '../utils/utils';
 
@@ -11,32 +11,73 @@ const IMAGE_WIDTH = 640;
 const IMAGE_HEIGHT = 480;
 
 function ImageCanvas({ image }: ImageCanvasProps) {
-  // console.log(image);
-  let canvasT = null || undefined;
-  const canvasRef = useRef<HTMLCanvasElement>(canvasT);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
   const [isDrag, setIsDrag] = useState<boolean>(false);
   const [startX, setStartX] = useState<number>(0);
-  let scrollLeftSide = canvasRef?.current?.scrollLeft;
+
+  const [radian, setRadian] = useState(0);
+
+  const getRotateAngle = useCallback(
+    (zoom: number) => {
+      switch (radian) {
+        case 0:
+          return zoom > 1 ? radian + 90 : 270;
+        case 270:
+          return zoom > 1 ? 0 : radian - 90;
+        default:
+          return zoom > 1 ? radian + 90 : radian - 90;
+      }
+    },
+    [radian]
+  );
+
+  const radToDeg = (angle: number) => {
+    return (angle * Math.PI) / 180;
+  };
 
   const onDragStart = (e: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => {
     e.preventDefault();
     setIsDrag(true);
-    setStartX(e.pageX + scrollLeftSide);
+    setStartX(e.pageX);
   };
   const onDragEnd = () => {
     setIsDrag(false);
   };
-  const rightClick = (e: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => {
-    e.preventDefault();
-    if (isDrag) {
-      return console.log('우클!');
-    }
-  };
   const onDragMove = (e: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => {
     if (isDrag) {
       const { scrollWidth, clientWidth, scrollLeft } = canvasRef?.current;
-      scrollLeftSide = startX - e.pageX;
-      console.log(scrollLeftSide);
+
+      const img = new Image();
+      img.src = image?.download_url;
+      const ctx = canvasRef?.current?.getContext('2d');
+      ctx?.save();
+      // 이미지는 항상 이미지의 왼쪽 위 부터 그려지는데
+      // 오른쪽으로 90도 회전했을때 이미지의 왼쪽 위가 캔버스의 오른쪽 위에 맞게끔 해주는 역할
+      const zoom = e.pageX - startX > 0 ? 1.05 : 0.95;
+      if (e.buttons === 1) {
+        ctx?.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+        ctx?.scale(zoom, zoom);
+        ctx?.drawImage(img, 0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
+      } else if (e.buttons === 2) {
+        ctx?.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+        const angle = getRotateAngle(zoom);
+        if (angle < 90) {
+          ctx?.translate(0, 0);
+        } else if (angle < 180) {
+          ctx?.translate(IMAGE_WIDTH, 0);
+        } else if (angle < 270) {
+          ctx?.translate(IMAGE_WIDTH, IMAGE_HEIGHT);
+        } else {
+          ctx?.translate(0, IMAGE_HEIGHT);
+        }
+        ctx?.rotate(radToDeg(angle));
+
+        ctx?.translate(0, 0);
+        ctx?.drawImage(img, 0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
+        ctx?.restore();
+        setRadian(angle);
+      }
+
       if (scrollLeft === 0) {
         setStartX(e.pageX);
       } else if (scrollWidth <= clientWidth + scrollLeft) {
@@ -44,6 +85,11 @@ function ImageCanvas({ image }: ImageCanvasProps) {
       }
     }
   };
+
+  const onContextMenu = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    e.preventDefault();
+  };
+
   const delay = 100;
   const onThrottleDragMove = useThrottle<
     [React.MouseEvent<HTMLCanvasElement, MouseEvent>]
@@ -83,7 +129,7 @@ function ImageCanvas({ image }: ImageCanvasProps) {
         onMouseMove={onThrottleDragMove}
         onMouseUp={onDragEnd}
         onMouseLeave={onDragEnd}
-        onContextMenu={rightClick}
+        onContextMenu={onContextMenu}
       />
       <style jsx>
         {`
@@ -93,7 +139,8 @@ function ImageCanvas({ image }: ImageCanvasProps) {
           }
           .canvas {
             width: 100%;
-            background-color: #fff;
+
+            cursor: pointer;
           }
         `}
       </style>
