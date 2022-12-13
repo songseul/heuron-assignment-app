@@ -2,7 +2,7 @@ import { useState } from 'react';
 import ImageCanvas from '../../components/ImageCanvas';
 import { InferGetServerSidePropsType } from 'next';
 import Seo from '../../components/Seo';
-import useThrottle from '../../utils/utils';
+import useThrottle from '../../hooks/useThrottle';
 import Nav from '../../components/Nav';
 
 function DetailPage({

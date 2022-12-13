@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { PicsumImage } from '../models/PicsumImage';
-import useThrottle from '../utils/utils';
+import useThrottle from '../hooks/useThrottle';
 
 type ImageCanvasProps = {
   image?: PicsumImage;
@@ -14,7 +14,6 @@ function ImageCanvas({ image }: ImageCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [isDrag, setIsDrag] = useState<boolean>(false);
   const [startX, setStartX] = useState<number>(0);
-
   const [radian, setRadian] = useState(0);
 
   const getRotateAngle = useCallback(
