@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import useThrottle from '../hooks/useThrottle';
 import { ImageCanvasProps } from '../models/PicsumImage';
+import Loading from './Loading';
 
 const CANVAS_WIDTH = 640;
 const CANVAS_HEIGHT = 480;
@@ -122,7 +123,9 @@ function ImageCanvas({ image }: ImageCanvasProps) {
           onContextMenu={onContextMenu}
         />
       ) : (
-        <span> Image Loading...</span>
+        <div>
+          <Loading />
+        </div>
       )}
       <style jsx>
         {`
@@ -134,6 +137,7 @@ function ImageCanvas({ image }: ImageCanvasProps) {
           .canvas {
             width: 100%;
             cursor: pointer;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
           }
         `}
       </style>

@@ -10,6 +10,7 @@ import {
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { HomeProps } from '../models/Table';
+import Loading from './Loading';
 
 function UserTable({ listData }: HomeProps) {
   interface listResults {
@@ -28,7 +29,11 @@ function UserTable({ listData }: HomeProps) {
     );
   };
   if (!listData) {
-    return <h2> List Loading... </h2>;
+    return (
+      <div>
+        <Loading />
+      </div>
+    );
   }
   return (
     <div className="table-layout">

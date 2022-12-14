@@ -7,6 +7,7 @@ import Nav from '../../components/Nav';
 
 function DetailPage({
   listData,
+  error,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const [index, setIndex] = useState<number>(0);
 
@@ -21,6 +22,10 @@ function DetailPage({
   };
 
   const scrollThrottle = useThrottle(handleWheel, 1000);
+
+  if (error) {
+    return alert(error + '서버를 확인해 주세요');
+  }
 
   return (
     <div onWheel={scrollThrottle}>
@@ -46,11 +51,21 @@ function DetailPage({
 export default DetailPage;
 
 export const getServerSideProps = async () => {
-  const listData = await (await fetch(`http://localhost:3000/api/list`)).json();
+  try {
+    const listData = await (
+      await fetch(`http://localhost:3000/api/list`)
+    ).json();
 
-  return {
-    props: {
-      listData,
-    },
-  };
+    return {
+      props: {
+        listData,
+      },
+    };
+  } catch (error) {
+    return {
+      props: {
+        error,
+      },
+    };
+  }
 };
