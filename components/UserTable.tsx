@@ -59,9 +59,8 @@ function UserTable({ listData }: HomeProps) {
                   <Image
                     src={list.download_url}
                     alt="author profile"
-                    width={300}
-                    height={200}
-                    layout="responsive"
+                    width={500}
+                    height={400}
                     className="image-list"
                   />
                 </TableCell>
