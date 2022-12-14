@@ -4,6 +4,8 @@ import { InferGetServerSidePropsType } from 'next';
 import Seo from '../../components/Seo';
 import useThrottle from '../../hooks/useThrottle';
 import Nav from '../../components/Nav';
+import Scroll from '../../components/Scroll';
+import Loading from '../../components/Loading';
 
 function DetailPage({
   listData,
@@ -33,9 +35,14 @@ function DetailPage({
       <Nav title={listData[index].author} />
 
       {listData[index] == null ? (
-        <> loading...</>
+        <>
+          <Loading />
+        </>
       ) : (
-        <ImageCanvas image={listData[index]} />
+        <>
+          <ImageCanvas image={listData[index]} />
+          <Scroll />
+        </>
       )}
 
       <style jsx>{`
