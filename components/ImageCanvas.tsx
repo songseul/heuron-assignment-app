@@ -1,10 +1,7 @@
 import React, { useRef, useEffect, useState, useCallback } from 'react';
-import { PicsumImage } from '../models/PicsumImage';
 import useThrottle from '../hooks/useThrottle';
+import { ImageCanvasProps } from '../models/PicsumImage';
 
-type ImageCanvasProps = {
-  image?: PicsumImage;
-};
 const CANVAS_WIDTH = 640;
 const CANVAS_HEIGHT = 480;
 const IMAGE_WIDTH = 640;
@@ -130,8 +127,9 @@ function ImageCanvas({ image }: ImageCanvasProps) {
       <style jsx>
         {`
           .canvas-container {
-            margin-top: 100px;
             width: 700px;
+            margin: auto;
+            margin-top: 50px;
           }
           .canvas {
             width: 100%;

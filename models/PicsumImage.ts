@@ -6,3 +6,7 @@ export interface PicsumImage {
   url: string;
   download_url: string;
 }
+
+export type ImageCanvasProps = {
+  image?: PicsumImage;
+};

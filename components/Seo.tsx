@@ -1,8 +1,5 @@
 import Head from 'next/head';
-
-interface seoComponentProps {
-  title: string;
-}
+import { seoComponentProps } from '../models/SeoComponents';
 
 function Seo({ title }: seoComponentProps) {
   return (

@@ -8,11 +8,13 @@ export default function Home({
   listData,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   return (
-    <div className={styles.container}>
-      <Seo title="home" />
+    <>
       <Nav />
-      <UserTable listData={listData} />
-    </div>
+      <Seo title="home" />
+      <div className={styles.container}>
+        <UserTable listData={listData} />
+      </div>
+    </>
   );
 }
 

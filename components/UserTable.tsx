@@ -9,10 +9,7 @@ import {
 } from '@material-ui/core';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-
-type HomeProps = {
-  listData: [];
-};
+import { HomeProps } from '../models/Table';
 
 function UserTable({ listData }: HomeProps) {
   interface listResults {
@@ -34,7 +31,7 @@ function UserTable({ listData }: HomeProps) {
     return <h2> List Loading... </h2>;
   }
   return (
-    <div>
+    <div className="table-layout">
       <TableContainer component={Paper}>
         <Table size="small">
           <TableHead>
@@ -69,6 +66,9 @@ function UserTable({ listData }: HomeProps) {
         </Table>
       </TableContainer>
       <style jsx>{`
+        .table-layout {
+          margin-top: 50px;
+        }
         .image-list {
           cursor: pointer;
         }

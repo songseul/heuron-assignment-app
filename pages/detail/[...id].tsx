@@ -6,7 +6,6 @@ import useThrottle from '../../hooks/useThrottle';
 import Nav from '../../components/Nav';
 
 function DetailPage({
-  id,
   listData,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const [index, setIndex] = useState<number>(0);
@@ -46,19 +45,11 @@ function DetailPage({
 
 export default DetailPage;
 
-type Params = {
-  params: {
-    id: [string];
-  };
-};
-
-export const getServerSideProps = async ({ params }: Params) => {
-  const { id } = params;
+export const getServerSideProps = async () => {
   const listData = await (await fetch(`http://localhost:3000/api/list`)).json();
-  console.log(listData);
+
   return {
     props: {
-      id,
       listData,
     },
   };

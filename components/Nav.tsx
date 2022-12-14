@@ -1,6 +1,4 @@
-type NavProps = {
-  title?: string;
-};
+import { NavProps } from '../models/Navigation';
 
 function Nav(props: NavProps) {
   return (
@@ -13,6 +11,7 @@ function Nav(props: NavProps) {
           text-align: center;
           font-size: 1.5rem;
           line-height: 80px;
+          box-shadow: 2px 2px skyBlue, -1em 0 0.4em olive;
         }
       `}</style>
     </nav>
